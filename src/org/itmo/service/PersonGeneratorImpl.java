@@ -7,6 +7,7 @@ import org.itmo.type.Person;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,9 +30,9 @@ public class PersonGeneratorImpl implements PersonGenerator {
         surnames = new ArrayList<>();
         patronymics = new ArrayList<>();
 
-        loadDictionary(names, "C:\\Users\\Alex\\IdeaProjects\\PersonDataGenerator\\src\\org\\itmo\\names.txt");
-        loadDictionary(surnames, "C:\\Users\\Alex\\IdeaProjects\\PersonDataGenerator\\src\\org\\itmo\\surnames.txt");
-        loadDictionary(patronymics, "C:\\Users\\Alex\\IdeaProjects\\PersonDataGenerator\\src\\org\\itmo\\patronymics.txt");
+        loadDictionary(names, "names.txt");
+        loadDictionary(surnames, "surnames.txt");
+        loadDictionary(patronymics, "patronymics.txt");
     }
 
     /**
