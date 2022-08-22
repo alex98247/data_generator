@@ -2,17 +2,20 @@ package org.itmo.service;
 
 import org.itmo.MistakeProcessor;
 import org.itmo.PersonGenerator;
+import org.itmo.type.ClusterInfo;
+import org.itmo.type.GeneratorResult;
 import org.itmo.type.Person;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Alexey Mironov
@@ -39,29 +42,39 @@ public class PersonGeneratorImpl implements PersonGenerator {
      * {@inheritDoc}
      */
     @Override
-    public List<Person> generate(int totalCount, int duplicatesCount) {
-        List<Person> result = new ArrayList<>(totalCount);
-        for (int i = 0; i < duplicatesCount; i++) {
+    public GeneratorResult generate(int totalCount, int clusterCount, int maxClusterSize) {
+        GeneratorResult result = new GeneratorResult();
+        for (int i = 0; i < clusterCount; i++) {
             Person person = getRandomPerson();
-            result.add(person);
-            result.add(mistakeProcessor.process(person));
+            int clusterSize = ThreadLocalRandom.current().nextInt(1, maxClusterSize);
+
+            List<Person> clusterItems = new ArrayList<>(clusterSize + 1);
+            clusterItems.add(person);
+            totalCount--;
+
+            for (int j = 0; j < clusterSize; j++) {
+                clusterItems.add(mistakeProcessor.process(person));
+                totalCount--;
+            }
+
+            result.addClusterInfo(new ClusterInfo(clusterItems));
         }
 
-        int unique = totalCount - 2 * duplicatesCount;
-        for (int i = 0; i < unique; i++) {
-            result.add(getRandomPerson());
+        for (int i = totalCount; i > 0; i--) {
+            List<Person> clusterItems = Collections.singletonList(getRandomPerson());
+            result.addClusterInfo(new ClusterInfo(clusterItems));
         }
 
         return result;
     }
 
     private void loadDictionary(List<String> dictionary, String path) throws IOException {
-        BufferedReader namesReader = new BufferedReader(new FileReader(path));
-        String line;
-        while ((line = namesReader.readLine()) != null) {
-            dictionary.add(line);
+        try (BufferedReader namesReader = new BufferedReader(new FileReader(path))) {
+            String line;
+            while ((line = namesReader.readLine()) != null) {
+                dictionary.add(line);
+            }
         }
-        namesReader.close();
     }
 
     private String getRandomElement(List<String> dictionary) {

@@ -1,6 +1,7 @@
 package org.itmo;
 
 import org.itmo.service.PersonGeneratorImpl;
+import org.itmo.type.GeneratorResult;
 import org.itmo.type.Person;
 
 import java.io.IOException;
@@ -12,11 +13,15 @@ public class Main {
     public static void main(String[] args) throws IOException {
         int total = 1000;
         int duplicates = 50;
+        int maxClusterSize = 10;
         PersonGenerator generator = new PersonGeneratorImpl();
-        List<Person> people = generator.generate(total, duplicates);
+        GeneratorResult generatorResult = generator.generate(total, duplicates, maxClusterSize);
+        List<Person> people = generatorResult.getGeneratedItems();
 
-        PrintWriter writer = new PrintWriter("out.txt");
-        people.forEach(p -> writer.println(String.format("%s, %s, %s", p.getSurname(), p.getName(), p.getPatronymic())));
-        writer.close();
+        try (PrintWriter writer = new PrintWriter("out.txt")) {
+            people.forEach(p -> writer.println(String.format("%s, %s, %s", p.getSurname(), p.getName(), p.getPatronymic())));
+        }
+
+        System.out.printf("Total count: %d, \n Clusters count: %d%n", people.size(), generatorResult.getClusterInfos().size());
     }
 }

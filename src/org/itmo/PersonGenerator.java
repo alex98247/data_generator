@@ -1,12 +1,10 @@
 package org.itmo;
 
-import org.itmo.type.Person;
-
-import java.util.List;
+import org.itmo.type.GeneratorResult;
 
 /**
  * @author Alexey Mironov
  */
 public interface PersonGenerator {
-    List<Person> generate(int totalCount, int duplicatesCount);
+    GeneratorResult generate(int totalCount, int duplicatesCount, int maxClusterSize);
 }
