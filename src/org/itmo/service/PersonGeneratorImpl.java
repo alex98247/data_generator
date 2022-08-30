@@ -50,6 +50,7 @@ public class PersonGeneratorImpl implements PersonGenerator {
 
             List<Person> clusterItems = new ArrayList<>(clusterSize + 1);
             clusterItems.add(person);
+            result.addGroundTruth(person);
             totalCount--;
 
             for (int j = 0; j < clusterSize; j++) {

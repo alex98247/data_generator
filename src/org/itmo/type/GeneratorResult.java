@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
  */
 public class GeneratorResult {
     private List<ClusterInfo> clusterInfos = new ArrayList<>();
+    private final List<Person> groundTruth = new ArrayList<>();
 
     public List<Person> getGeneratedItems() {
         return clusterInfos.stream()
@@ -50,5 +51,13 @@ public class GeneratorResult {
 
     public void addClusterInfo(ClusterInfo clusterInfo) {
         clusterInfos.add(clusterInfo);
+    }
+
+    public List<Person> getGroundTruth() {
+        return groundTruth;
+    }
+
+    public void addGroundTruth(Person person) {
+        groundTruth.add(person);
     }
 }
