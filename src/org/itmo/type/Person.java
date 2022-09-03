@@ -7,7 +7,7 @@ import java.util.UUID;
  * @author Alexey Mironov
  */
 public class Person {
-    private UUID clusterId;
+    private long clusterId;
     private UUID id;
     private String name;
     private String surname;
@@ -55,11 +55,11 @@ public class Person {
         this.phone = phone;
     }
 
-    public UUID getClusterId() {
+    public long getClusterId() {
         return clusterId;
     }
 
-    public void setClusterId(UUID clusterId) {
+    public void setClusterId(long clusterId) {
         this.clusterId = clusterId;
     }
 

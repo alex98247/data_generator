@@ -43,9 +43,11 @@ public class PersonGeneratorImpl implements PersonGenerator {
      */
     @Override
     public GeneratorResult generate(int totalCount, int clusterCount, int maxClusterSize) {
+        long clusterId = 0;
         GeneratorResult result = new GeneratorResult();
         for (int i = 0; i < clusterCount; i++) {
-            Person person = getRandomPerson();
+            Person person = getRandomPerson(clusterId);
+            clusterId++;
             int clusterSize = ThreadLocalRandom.current().nextInt(1, maxClusterSize);
 
             List<Person> clusterItems = new ArrayList<>(clusterSize + 1);
@@ -62,7 +64,8 @@ public class PersonGeneratorImpl implements PersonGenerator {
         }
 
         for (int i = totalCount; i > 0; i--) {
-            List<Person> clusterItems = Collections.singletonList(getRandomPerson());
+            List<Person> clusterItems = Collections.singletonList(getRandomPerson(clusterId));
+            clusterId++;
             result.addClusterInfo(new ClusterInfo(clusterItems));
         }
 
@@ -82,10 +85,10 @@ public class PersonGeneratorImpl implements PersonGenerator {
         return dictionary.get(rand.nextInt(dictionary.size()));
     }
 
-    private Person getRandomPerson() {
+    private Person getRandomPerson(long clusterId) {
         Person person = new Person();
         person.setId(UUID.randomUUID());
-        person.setClusterId(UUID.randomUUID());
+        person.setClusterId(clusterId);
         person.setName(getRandomElement(names));
         person.setSurname(getRandomElement(surnames));
         person.setPatronymic(getRandomElement(patronymics));
