@@ -20,10 +20,14 @@ public class Main {
 
         try (PrintWriter personWriter = new PrintWriter("out.txt");
              PrintWriter groundTruthWriter = new PrintWriter("ground_truth.txt")) {
-            people.forEach(p -> personWriter.println(String.format("%s, %s, %s", p.getSurname(), p.getName(), p.getPatronymic())));
-            generatorResult.getGroundTruth().forEach(p -> groundTruthWriter.println(String.format("%s, %s, %s", p.getSurname(), p.getName(), p.getPatronymic())));
+            people.forEach(p -> personWriter.println(personToCsvRow(p)));
+            generatorResult.getGroundTruth().forEach(p -> groundTruthWriter.println(personToCsvRow(p)));
         }
 
         System.out.printf("Total count: %d, \n Clusters count: %d%n", people.size(), generatorResult.getClusterInfos().size());
+    }
+
+    private static String personToCsvRow(Person person) {
+        return String.format("%s, %s, %s, %s", person.getClusterId(), person.getSurname(), person.getName(), person.getPatronymic());
     }
 }
